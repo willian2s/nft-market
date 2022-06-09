@@ -1,12 +1,25 @@
 .artist-whitelist-table {
   width: 100%;
   .ant-table table {
-
-  color: @black-100;
+    color: @black-100;
   }
 }
 .admin-content {
   h1 {
-    color: white;
+    color: @primary-color;
   }
+}
+
+.modal-box .ant-modal-header {
+  background-color: @primary-color !important;
+}
+
+.modal-box .ant-modal-footer {
+  background-color: @primary-color;
+}
+
+.ant-modal-footer .ant-btn-primary {
+  background: @accent-color !important;
+  border-color: @primary-color;
+  color: @primary-color;
 }

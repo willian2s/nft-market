@@ -125,7 +125,7 @@ code {
 
 .ant-upload.ant-upload-drag {
   border-radius: 8px;
-  border-color: transparent;
+  border-color: @subtext-color;
 }
 
 .tab-title {
@@ -186,6 +186,7 @@ code {
 }
 
 .ant-tabs-tab-active {
+  background-color: @primary-color;
   .tab-title {
     color: @text-color;
   }
@@ -210,36 +211,73 @@ h1 {
 .ant-btn:hover {
   background-color: transparent !important;
 }
+.ant-steps-item-finish
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title {
+  color: @primary-color;
+}
+.ant-steps-item-finish
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-description {
+  color: #008999d9 !important;
+}
 .ant-steps-item-process
   > .ant-steps-item-container
   > .ant-steps-item-content
   > .ant-steps-item-title {
-  color: hsla(0, 0%, 100%, 0.85);
+  color: #008999d9;
+}
+.ant-steps-item-process
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-description {
+  color: #008999d9 !important;
+}
+.ant-steps-vertical > .ant-steps-item {
+  background-color: @bg-color !important;
+}
+.ant-steps-vertical
+  > .ant-steps-item
+  > .ant-steps-item-container
+  > .ant-steps-item-tail::after {
+  color: @subtext-color;
 }
 .ant-steps-item-wait
   > .ant-steps-item-container
   > .ant-steps-item-content
   > .ant-steps-item-title {
-  color: hsla(0, 0%, 100%, 0.45);
+  color: @subtext-color;
+}
+.ant-steps-item-wait
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-description {
+  color: @subtext-color !important;
 }
 .ant-steps-item-wait
   .ant-steps-item-icon
   > .ant-steps-icon
   .ant-steps-icon-dot {
-  background: hsla(0, 0%, 100%, 0.3);
+  background: @subtext-color;
 }
 .ant-card {
-  background: #141414;
+  background: @bg-color;
 }
 .ant-card-bordered {
-  border: 1px solid #303030;
+  border: 1px solid @primary-color;
+}
+
+.ant-card-bordered:hover {
+  border: 1px solid #008999d9;
 }
 
 .ant-card-meta-title {
   color: rgba(255, 255, 255, 0.85);
 }
 .tab-title {
-  color: rgba(255, 255, 255, 0.45);
+  color: @text-color-secondary;
 }
 .ant-btn {
   height: 56px;
@@ -248,6 +286,11 @@ h1 {
   line-height: 16px;
   background-color: transparent !important;
   color: white;
+  &.attr-button {
+    color: @primary-color;
+    border-color: @primary-color;
+    border-radius: 8px;
+  }
   &.secondary-btn {
     color: @black-100;
     background: @metaplex-primary-color !important;

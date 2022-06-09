@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Menu, Modal } from 'antd';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { Notifications } from '../Notifications';
 import useWindowDimensions from '../../utils/layout';
 import { MenuOutlined } from '@ant-design/icons';
-import { HowToBuyModal } from '../HowToBuyModal';
 import {
   Cog,
   CurrentUserBadge,
@@ -14,25 +12,18 @@ import {
 import { ConnectButton } from '@oyster/common';
 import { MobileNavbar } from '../MobileNavbar';
 
-const getDefaultLinkActions = (connected: boolean) => {
+const getDefaultLinkActions = () => {
   return [
-    <Link to={`/`} key={'explore'}>
-      <Button className="app-btn">Explore</Button>
+    <Link to={`/`} key={'artwork'}>
+      <Button className="app-btn">NFTs</Button>
     </Link>,
-    <Link to={`/collections`} key={'collections'}>
-      <Button className="app-btn">Collections</Button>
-    </Link>,
-    <Link to={`/artworks`} key={'artwork'}>
-      <Button className="app-btn">{connected ? 'My Items' : 'Artwork'}</Button>
-    </Link>,
-    <Link to={`/artists`} key={'artists'}>
-      <Button className="app-btn">Creators</Button>
+    <Link to={`/art/create`} key={'artists'}>
+      <Button className="app-btn">Criar NFT</Button>
     </Link>,
   ];
 };
 
 const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
-  const { connected } = useWallet();
   return (
     <div
       style={{
@@ -40,7 +31,7 @@ const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
         flexDirection: vertical ? 'column' : 'row',
       }}
     >
-      {getDefaultLinkActions(connected)}
+      {getDefaultLinkActions()}
     </div>
   );
 };
@@ -54,7 +45,7 @@ export const MetaplexMenu = () => {
     return (
       <>
         <Modal
-          title={<img src={'/metaplex-logo.svg'} />}
+          title={<img src={'/ace1-logo.svg'} />}
           visible={isModalVisible}
           footer={null}
           className={'modal-box'}
@@ -67,7 +58,7 @@ export const MetaplexMenu = () => {
         >
           <div className="site-card-wrapper mobile-menu-modal">
             <Menu onClick={() => setIsModalVisible(false)}>
-              {getDefaultLinkActions(connected).map((item, idx) => (
+              {getDefaultLinkActions().map((item, idx) => (
                 <Menu.Item key={idx}>{item}</Menu.Item>
               ))}
             </Menu>
@@ -77,10 +68,6 @@ export const MetaplexMenu = () => {
                   <ConnectButton
                     onClick={() => setIsModalVisible(false)}
                     className="secondary-btn"
-                  />
-                  <HowToBuyModal
-                    onClick={() => setIsModalVisible(false)}
-                    buttonClassName="black-btn"
                   />
                 </div>
               ) : (
@@ -93,7 +80,6 @@ export const MetaplexMenu = () => {
                       setIsModalVisible(false);
                     }}
                   />
-                  <Notifications />
                   <Cog />
                 </>
               )}
@@ -113,7 +99,7 @@ export const MetaplexMenu = () => {
 export const LogoLink = () => {
   return (
     <Link to={`/`}>
-      <img src={'/metaplex-logo.svg'} />
+      <img src={'/ace1-logo.svg'} />
     </Link>
   );
 };
@@ -129,10 +115,7 @@ export const AppBar = () => {
           &nbsp;&nbsp;&nbsp;
           <MetaplexMenu />
         </div>
-        <div className="app-right">
-          {!connected && (
-            <HowToBuyModal buttonClassName="modal-button-default" />
-          )}
+        <div className="app-right app-bar-box">
           {!connected && (
             <ConnectButton style={{ height: 48 }} allowWalletChange />
           )}
@@ -143,7 +126,6 @@ export const AppBar = () => {
                 showAddress={true}
                 iconSize={24}
               />
-              <Notifications />
               <Cog />
             </>
           )}

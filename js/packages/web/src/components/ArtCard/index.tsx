@@ -3,8 +3,7 @@ import { Card, CardProps, Button, Badge } from 'antd';
 import { MetadataCategory, StringPublicKey } from '@oyster/common';
 import { ArtContent } from '../ArtContent';
 import { useArt } from '../../hooks';
-import { Artist, ArtType } from '../../types';
-import { MetaAvatar } from '../MetaAvatar';
+import { Artist } from '../../types';
 
 const { Meta } = Card;
 
@@ -53,17 +52,9 @@ export const ArtCard = (props: ArtCardProps) => {
   } = props;
   const art = useArt(pubkey);
   let { name, creators } = props;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   creators = art?.creators || creators || [];
   name = art?.title || name || ' ';
-
-  let badge = '';
-  if (art.type === ArtType.NFT) {
-    badge = 'Unique';
-  } else if (art.type === ArtType.Master) {
-    badge = 'NFT 0';
-  } else if (art.type === ArtType.Print) {
-    badge = `${art.edition} of ${art.supply}`;
-  }
 
   const card = (
     <Card
@@ -84,10 +75,6 @@ export const ArtCard = (props: ArtCardProps) => {
           X
         </Button>
       )}
-      <div className="art-card__header">
-        <MetaAvatar creators={creators} size={32} />
-        <div className="edition-badge">{badge}</div>
-      </div>
       <div className="art-content__wrapper">
         <ArtContent
           pubkey={pubkey}
@@ -104,18 +91,6 @@ export const ArtCard = (props: ArtCardProps) => {
         title={`${name}`}
         description={
           <>
-            {/* {art.type === ArtType.Master && (
-              <>
-                <br />
-                {!endAuctionAt && (
-                  <span style={{ padding: '24px' }}>
-                    {(art.maxSupply || 0) - (art.supply || 0)}/
-                    {art.maxSupply || 0} prints remaining
-                  </span>
-                )}
-              </>
-            )} */}
-
             {count && (
               <div className="edition-badge">Selected count: {count}</div>
             )}

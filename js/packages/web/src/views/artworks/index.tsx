@@ -1,29 +1,26 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import React, { useEffect, useState } from 'react';
-import { Layout, Row, Col, Tabs, Dropdown, Menu } from 'antd';
+import { Layout, Row, Col, Tabs } from 'antd';
 import { useMeta } from '../../contexts';
 import { CardLoader } from '../../components/MyLoader';
 
 import { ArtworkViewState } from './types';
 import { useItems } from './hooks/useItems';
 import ItemCard from './components/ItemCard';
-import { useUserAccounts } from '@oyster/common';
-import { DownOutlined } from '@ant-design/icons';
+import { useStore, useUserAccounts } from '@oyster/common';
 import { isMetadata, isPack } from './utils';
+import { SetupView } from './setup';
 
 const { TabPane } = Tabs;
 const { Content } = Layout;
 
 export const ArtworksView = () => {
   const { connected } = useWallet();
-  const {
-    isLoading,
-    pullAllMetadata,
-    storeIndexer,
-    pullItemsPage,
-    isFetching,
-  } = useMeta();
+  const { isLoading, pullItemsPage, isFetching, store } = useMeta();
+  const { isConfigured } = useStore();
   const { userAccounts } = useUserAccounts();
+
+  const showArts = (store && isConfigured) || isLoading;
 
   const [activeKey, setActiveKey] = useState(ArtworkViewState.Metaplex);
 
@@ -50,72 +47,59 @@ export const ArtworksView = () => {
       {isDataLoading &&
         [...Array(10)].map((_, idx) => <CardLoader key={idx} />)}
       {!isDataLoading &&
-        userItems.map(item => {
-          const pubkey = isMetadata(item)
-            ? item.pubkey
-            : isPack(item)
-            ? item.provingProcessKey
-            : item.edition?.pubkey || item.metadata.pubkey;
+        userItems
+          .map(item => {
+            const pubkey = isMetadata(item)
+              ? item.pubkey
+              : isPack(item)
+              ? item.provingProcessKey
+              : item.edition?.pubkey || item.metadata.pubkey;
 
-          return <ItemCard item={item} key={pubkey} />;
-        })}
+            return <ItemCard item={item} key={pubkey} />;
+          })
+          .reverse()}
     </div>
-  );
-
-  const refreshButton = connected && storeIndexer.length !== 0 && (
-    <Dropdown.Button
-      className="refresh-button padding0"
-      onClick={() => pullItemsPage(userAccounts)}
-      icon={<DownOutlined />}
-      overlayClassName="refresh-overlay"
-      overlay={
-        <Menu className="gray-dropdown">
-          <Menu.Item onClick={() => pullAllMetadata()}>
-            Load All Metadata
-          </Menu.Item>
-        </Menu>
-      }
-    >
-      Refresh
-    </Dropdown.Button>
   );
 
   return (
     <Layout style={{ margin: 0, marginTop: 30 }}>
-      <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
-        <Col style={{ width: '100%', marginTop: 10 }}>
-          <Row>
-            <Tabs
-              activeKey={activeKey}
-              onTabClick={key => setActiveKey(key as ArtworkViewState)}
-              tabBarExtraContent={refreshButton}
-            >
-              <TabPane
-                tab={<span className="tab-title">All</span>}
-                key={ArtworkViewState.Metaplex}
+      {showArts ? (
+        <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <Col style={{ width: '100%', marginTop: 10 }}>
+            <Row>
+              <Tabs
+                activeKey={activeKey}
+                onTabClick={key => setActiveKey(key as ArtworkViewState)}
               >
-                {artworkGrid}
-              </TabPane>
-              {connected && (
                 <TabPane
-                  tab={<span className="tab-title">Owned</span>}
-                  key={ArtworkViewState.Owned}
+                  tab={<span className="tab-title">Todos</span>}
+                  key={ArtworkViewState.Metaplex}
                 >
                   {artworkGrid}
                 </TabPane>
-              )}
-              {connected && (
-                <TabPane
-                  tab={<span className="tab-title">Created</span>}
-                  key={ArtworkViewState.Created}
-                >
-                  {artworkGrid}
-                </TabPane>
-              )}
-            </Tabs>
-          </Row>
-        </Col>
-      </Content>
+                {connected && (
+                  <TabPane
+                    tab={<span className="tab-title">Meus</span>}
+                    key={ArtworkViewState.Owned}
+                  >
+                    {artworkGrid}
+                  </TabPane>
+                )}
+                {connected && (
+                  <TabPane
+                    tab={<span className="tab-title">Criados</span>}
+                    key={ArtworkViewState.Created}
+                  >
+                    {artworkGrid}
+                  </TabPane>
+                )}
+              </Tabs>
+            </Row>
+          </Col>
+        </Content>
+      ) : (
+        <SetupView />
+      )}
     </Layout>
   );
 };

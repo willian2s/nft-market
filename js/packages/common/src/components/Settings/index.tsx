@@ -30,7 +30,7 @@ export const Settings = ({
         />
         {publicKey && (
           <>
-            <Tooltip title="Address copied">
+            <Tooltip title="Copiar Endereço">
               <div
                 style={{
                   fontWeight: 600,

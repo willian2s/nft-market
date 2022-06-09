@@ -161,11 +161,11 @@ export const ArtCreateView = () => {
                 maxWidth: '100%',
               }}
             >
-              <Step title="Category" />
+              <Step title="Categoria" />
               <Step title="Upload" />
               <Step title="Info" />
               <Step title="Royalties" />
-              <Step title="Launch" />
+              <Step title="Criar" />
             </Steps>
           </Col>
         )}
@@ -229,7 +229,12 @@ export const ArtCreateView = () => {
           )}
           {0 < step && step < 5 && (
             <div style={{ margin: 'auto', width: 'fit-content' }}>
-              <Button onClick={() => gotoStep(step - 1)}>Back</Button>
+              <Button
+                className="attr-button"
+                onClick={() => gotoStep(step - 1)}
+              >
+                Voltar
+              </Button>
             </div>
           )}
         </Col>
@@ -248,17 +253,7 @@ const CategoryStep = (props: {
   return (
     <>
       <Row className="call-to-action">
-        <h2>Create a new item</h2>
-        <p>
-          First time creating on Metaplex?{' '}
-          <a
-            href="https://docs.metaplex.com/storefront/create"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Read our creators’ guide.
-          </a>
-        </p>
+        <h2>Criar novo NFT</h2>
       </Row>
       <Row justify={width < 768 ? 'center' : 'start'}>
         <Col>
@@ -269,7 +264,7 @@ const CategoryStep = (props: {
               onClick={() => props.confirm(MetadataCategory.Image)}
             >
               <div>
-                <div>Image</div>
+                <div>Imagem</div>
                 <div className="type-btn-description">JPG, PNG, GIF</div>
               </div>
             </Button>
@@ -317,7 +312,7 @@ const CategoryStep = (props: {
               onClick={() => props.confirm(MetadataCategory.HTML)}
             >
               <div>
-                <div>HTML Asset</div>
+                <div>Arquivo HTML</div>
                 <div className="type-btn-description">HTML</div>
               </div>
             </Button>
@@ -358,17 +353,17 @@ const UploadStep = (props: {
   const uploadMsg = (category: MetadataCategory) => {
     switch (category) {
       case MetadataCategory.Audio:
-        return 'Upload your audio creation (MP3, FLAC, WAV)';
+        return 'Carregue um arquivo de áudio (MP3, FLAC, WAV)';
       case MetadataCategory.Image:
-        return 'Upload your image creation (PNG, JPG, GIF)';
+        return 'Carregue um arquivo de imagem (PNG, JPG, GIF)';
       case MetadataCategory.Video:
-        return 'Upload your video creation (MP4, MOV, GLB)';
+        return 'Carregue um arquivo de vídeo (MP4, MOV, GLB)';
       case MetadataCategory.VR:
-        return 'Upload your AR/VR creation (GLB)';
+        return 'Carregue um arquivo de AR/VR (GLB)';
       case MetadataCategory.HTML:
-        return 'Upload your HTML File (HTML)';
+        return 'Carregue um arquivo de HTML (HTML)';
       default:
-        return 'Please go back and choose a category';
+        return 'Por favor, volte e escolha uma categoria';
     }
   };
 
@@ -389,26 +384,20 @@ const UploadStep = (props: {
     }
   };
 
-  const { category } = props.attributes.properties;
-
-  const urlPlaceholder = `http://example.com/path/to/${
-    category === MetadataCategory.Image ? 'image' : 'file'
-  }`;
-
   return (
     <>
       <Row className="call-to-action">
-        <h2>Now, let&apos;s upload your creation</h2>
+        <h2>Agora, vamos carregar seu arquivo</h2>
         <p style={{ fontSize: '1.2rem' }}>
-          Your file will be uploaded to the decentralized web via Arweave.
-          Depending on file type, can take up to 1 minute. Arweave is a new type
-          of storage that backs data with sustainable and perpetual endowments,
-          allowing users and developers to truly store data forever – for the
-          very first time.
+          Seu arquivo será carregado para a web descentralizada via Arweave.
+          Dependendo do tipo de arquivo, pode levar até 1 minuto. Arweave é um
+          novo tipo de armazenamento que apóia dados sustentáveis e perpétuos,
+          permitindo que usuários e desenvolvedores realmente armazenem dados
+          para sempre.
         </p>
       </Row>
       <Row className="content-action">
-        <h3>Upload a cover image (PNG, JPG, GIF, SVG)</h3>
+        <h3>Carregue um arquivo de imagem (PNG, JPG, GIF, SVG)</h3>
         <Dragger
           accept=".png,.jpg,.gif,.mp4,.svg"
           style={{ padding: 20, background: 'rgba(255, 255, 255, 0.08)' }}
@@ -446,14 +435,14 @@ const UploadStep = (props: {
         >
           <div className="ant-upload-drag-icon">
             <h3 style={{ fontWeight: 700 }}>
-              Upload your cover image (PNG, JPG, GIF, SVG)
+              Carregue um arquivo de imagem (PNG, JPG, GIF, SVG)
             </h3>
           </div>
           {coverArtError ? (
             <Text type="danger">{coverArtError}</Text>
           ) : (
             <p className="ant-upload-text" style={{ color: '#6d6d6d' }}>
-              Drag and drop, or click to browse
+              Arraste e solte ou clique para navegar
             </p>
           )}
         </Dragger>
@@ -487,52 +476,14 @@ const UploadStep = (props: {
             }}
           >
             <div className="ant-upload-drag-icon">
-              <h3 style={{ fontWeight: 700 }}>Upload your creation</h3>
+              <h3 style={{ fontWeight: 700 }}>Carregue um arquivo</h3>
             </div>
             <p className="ant-upload-text" style={{ color: '#6d6d6d' }}>
-              Drag and drop, or click to browse
+              Arraste e solte ou clique para navegar
             </p>
           </Dragger>
         </Row>
       )}
-      <Form.Item
-        className={'url-form-action'}
-        style={{
-          width: '100%',
-          flexDirection: 'column',
-          paddingTop: 30,
-          marginBottom: 4,
-        }}
-        label={<h3>OR use absolute URL to content</h3>}
-        labelAlign="left"
-        colon={false}
-        validateStatus={customURLErr ? 'error' : 'success'}
-        help={customURLErr}
-      >
-        <Input
-          disabled={!!mainFile}
-          placeholder={urlPlaceholder}
-          value={customURL}
-          onChange={ev => setCustomURL(ev.target.value)}
-          onFocus={() => setCustomURLErr('')}
-          onBlur={() => {
-            if (!customURL) {
-              setCustomURLErr('');
-              return;
-            }
-
-            try {
-              // Validate URL and save
-              new URL(customURL);
-              setCustomURL(customURL);
-              setCustomURLErr('');
-            } catch (e) {
-              console.error(e);
-              setCustomURLErr('Please enter a valid absolute URL');
-            }
-          }}
-        />
-      </Form.Item>
       <Row>
         <Button
           type="primary"
@@ -575,10 +526,10 @@ const UploadStep = (props: {
             props.setFiles(files);
             props.confirm();
           }}
-          style={{ marginTop: 24 }}
+          style={{ marginTop: 34 }}
           className="action-btn"
         >
-          Continue to Mint
+          Continue para Info
         </Button>
       </Row>
     </>
@@ -666,11 +617,8 @@ const InfoStep = (props: {
   return (
     <>
       <Row className="call-to-action">
-        <h2>Describe your item</h2>
-        <p>
-          Provide detailed description of your creative process to engage with
-          your audience.
-        </p>
+        <h2>Informações do NFT</h2>
+        <p>Forneça maiores informações sobre NFT.</p>
       </Row>
       <Row className="content-action" justify="space-around">
         <Col>
@@ -689,11 +637,11 @@ const InfoStep = (props: {
         </Col>
         <Col className="section" style={{ minWidth: 300 }}>
           <label className="action-field">
-            <span className="field-title">Title</span>
+            <span className="field-title">Título</span>
             <Input
               autoFocus
               className="input"
-              placeholder="Max 50 characters"
+              placeholder="Max 50 caractéres"
               maxLength={50}
               allowClear
               value={props.attributes.name}
@@ -706,10 +654,10 @@ const InfoStep = (props: {
             />
           </label>
           <label className="action-field">
-            <span className="field-title">Symbol</span>
+            <span className="field-title">Símbolo</span>
             <Input
               className="input"
-              placeholder="Max 10 characters"
+              placeholder="Max 10 caractéres"
               maxLength={10}
               allowClear
               value={props.attributes.symbol}
@@ -729,12 +677,12 @@ const InfoStep = (props: {
               }}
             />
             <span className="field-title" style={{ marginLeft: '10px' }}>
-              Is parent collection?
+              É coleção de pai?
             </span>
           </label>
           {!isCollection && (
             <label className="action-field">
-              <span className="field-title">Collection</span>
+              <span className="field-title">Coleção</span>
               <ArtSelector
                 filter={artistFilter}
                 selected={selectedCollection}
@@ -743,15 +691,15 @@ const InfoStep = (props: {
                 }}
                 allowMultiple={false}
               >
-                Select NFT
+                Selecione o NFT
               </ArtSelector>
             </label>
           )}
           <label className="action-field">
-            <span className="field-title">Description</span>
+            <span className="field-title">Descrição</span>
             <Input.TextArea
               className="input textarea"
-              placeholder="Max 500 characters"
+              placeholder="Max 500 caractéres"
               maxLength={500}
               value={props.attributes.description}
               onChange={info =>
@@ -763,11 +711,13 @@ const InfoStep = (props: {
               allowClear
             />
           </label>
-          <label className="action-field">
-            <span className="field-title">Maximum Supply</span>
-            {!isCollection ? (
+          {!isCollection && (
+            <label className="action-field">
+              <span className="field-title">
+                Suprimento Máximo (para único, deixar vázio)
+              </span>
               <InputNumber
-                placeholder="Quantity"
+                placeholder="Qauntidade"
                 value={props.attributes.properties.maxSupply}
                 onChange={(val: number) => {
                   props.setAttributes({
@@ -780,12 +730,10 @@ const InfoStep = (props: {
                 }}
                 className="royalties-input"
               />
-            ) : (
-              0
-            )}
-          </label>
+            </label>
+          )}
           <label className="action-field">
-            <span className="field-title">Attributes</span>
+            <span className="field-title">Atributos</span>
           </label>
           <Form name="dynamic_attributes" form={form} autoComplete="off">
             <Form.List name="attributes">
@@ -806,7 +754,10 @@ const InfoStep = (props: {
                       <Form.Item name={[name, 'display_type']} hasFeedback>
                         <Input placeholder="display_type (Optional)" />
                       </Form.Item>
-                      <MinusCircleOutlined onClick={() => remove(name)} />
+                      <MinusCircleOutlined
+                        className="icon-remove"
+                        onClick={() => remove(name)}
+                      />
                     </Space>
                   ))}
                   <Form.Item>
@@ -815,8 +766,9 @@ const InfoStep = (props: {
                       onClick={() => add()}
                       block
                       icon={<PlusOutlined />}
+                      className="ant-btn attr-button"
                     >
-                      Add attribute
+                      Adicionar atributo
                     </Button>
                   </Form.Item>
                 </>
@@ -851,7 +803,7 @@ const InfoStep = (props: {
           }}
           className="action-btn"
         >
-          Continue to royalties
+          Continue para royalties
         </Button>
       </Row>
     </>
@@ -896,7 +848,7 @@ const RoyaltiesSplitter = (props: {
                 gutter={[0, 16]}
                 style={{ margin: '5px auto' }}
               >
-                <Col span={4} style={{ padding: 10 }}>
+                <Col span={4} style={{ padding: 10, color: '#008999' }}>
                   {creator.label}
                 </Col>
                 <Col span={3}>
@@ -916,7 +868,8 @@ const RoyaltiesSplitter = (props: {
                 {props.isShowErrors && amt === 0 && (
                   <Col style={{ paddingLeft: 12 }}>
                     <Text type="danger">
-                      The split percentage for this creator cannot be 0%.
+                      A porcentagem de divisão para este criador não pode ser
+                      0%.
                     </Text>
                   </Col>
                 )}
@@ -977,24 +930,21 @@ const RoyaltiesStep = (props: {
   return (
     <>
       <Row className="call-to-action" style={{ marginBottom: 20 }}>
-        <h2>Set royalties and creator splits</h2>
+        <h2>Definir royalties</h2>
         <p>
-          Royalties ensure that you continue to get compensated for your work
-          after its initial sale.
+          Os royalties garantem que a ACE1 seja compensada após a transferencia
+          de um NFT, em caso de venda futura.
         </p>
       </Row>
       <Row className="content-action" style={{ marginBottom: 20 }}>
         <label className="action-field">
-          <span className="field-title">Royalty Percentage</span>
-          <p>
-            This is how much of each secondary sale will be paid out to the
-            creators.
-          </p>
+          <span className="field-title">Porcentage de Royalty</span>
+          <p>Este é o quanto de cada venda secundária será pago a ACE1</p>
           <InputNumber
             autoFocus
             min={0}
             max={100}
-            placeholder="Between 0 and 100"
+            placeholder="Entre 0 e 100"
             onChange={(val: number) => {
               props.setAttributes({
                 ...props.attributes,
@@ -1008,10 +958,10 @@ const RoyaltiesStep = (props: {
       {[...fixedCreators, ...creators].length > 0 && (
         <Row>
           <label className="action-field" style={{ width: '100%' }}>
-            <span className="field-title">Creators Split</span>
+            <span className="field-title">Divisão por criador</span>
             <p>
-              This is how much of the proceeds from the initial sale and any
-              royalties will be split out amongst the creators.
+              Este é o valor da venda inicial e quaisquer royalties serão
+              divididos entre os criadores.
             </p>
             <RoyaltiesSplitter
               creators={[...fixedCreators, ...creators]}
@@ -1032,7 +982,7 @@ const RoyaltiesStep = (props: {
               color: 'white',
               fontSize: 25,
               padding: '0px 8px 3px 8px',
-              background: 'rgb(57, 57, 57)',
+              background: '#008999d9',
               borderRadius: '50%',
               marginRight: 5,
               verticalAlign: 'middle',
@@ -1042,12 +992,12 @@ const RoyaltiesStep = (props: {
           </span>
           <span
             style={{
-              color: 'rgba(255, 255, 255, 0.7)',
+              color: '#008999',
               verticalAlign: 'middle',
               lineHeight: 1,
             }}
           >
-            Add another creator
+            Adicionar outro criador.
           </span>
         </span>
         <MetaplexModal
@@ -1055,7 +1005,7 @@ const RoyaltiesStep = (props: {
           onCancel={() => setShowCreatorsModal(false)}
         >
           <label className="action-field" style={{ width: '100%' }}>
-            <span className="field-title">Creators</span>
+            <span className="field-title">Criadores</span>
             <UserSearch setCreators={setCreators} />
           </label>
         </MetaplexModal>
@@ -1063,8 +1013,8 @@ const RoyaltiesStep = (props: {
       {isShowErrors && totalRoyaltyShares !== 100 && (
         <Row>
           <Text type="danger" style={{ paddingBottom: 14 }}>
-            The split percentages for each creator must add up to 100%. Current
-            total split percentage is {totalRoyaltyShares}%.
+            As porcentagens de divisão para cada criador devem somar 100%. A
+            porcentagem total atual de divisão é {totalRoyaltyShares}%.
           </Text>
         </Row>
       )}
@@ -1113,7 +1063,7 @@ const RoyaltiesStep = (props: {
           }}
           className="action-btn"
         >
-          Continue to review
+          Continue para revisar
         </Button>
       </Row>
     </>
@@ -1161,11 +1111,7 @@ const LaunchStep = (props: {
   return (
     <>
       <Row className="call-to-action">
-        <h2>Launch your creation</h2>
-        <p>
-          Provide detailed description of your creative process to engage with
-          your audience.
-        </p>
+        <h2>Criar NFT</h2>
       </Row>
       <Row className="content-action" justify="space-around">
         <Col>
@@ -1185,14 +1131,14 @@ const LaunchStep = (props: {
         <Col className="section" style={{ minWidth: 300 }}>
           <Statistic
             className="create-statistic"
-            title="Royalty Percentage"
+            title="Porcentagem Royalty"
             value={props.attributes.seller_fee_basis_points / 100}
             precision={2}
             suffix="%"
           />
           {cost ? (
             <AmountLabel
-              title="Cost to Create"
+              title="Custo (Dólar)"
               amount={cost.toFixed(5)}
               tokenInfo={useTokenList().tokenMap.get(
                 WRAPPED_SOL_MINT.toString(),
@@ -1209,16 +1155,11 @@ const LaunchStep = (props: {
           size="large"
           onClick={props.confirm}
           className="action-btn"
+          style={{
+            marginTop: 34,
+          }}
         >
-          Pay with SOL
-        </Button>
-        <Button
-          disabled={true}
-          size="large"
-          onClick={props.confirm}
-          className="action-btn"
-        >
-          Pay with Credit Card
+          Criar
         </Button>
       </Row>
     </>
@@ -1255,56 +1196,46 @@ const WaitingStep = (props: {
         alignItems: 'center',
       }}
     >
-      <Spin size="large" />
       <Card>
         <Steps direction="vertical" current={props.step}>
           <Step
-            className={'white-description'}
-            title="Minting"
-            description="Starting Mint Process"
+            title="Criando"
+            description="Iniciando Processo de Criação"
             icon={setIconForStep(props.step, 0)}
           />
           <Step
-            className={'white-description'}
-            title="Preparing Assets"
+            title="Preparando Assets"
             icon={setIconForStep(props.step, 1)}
           />
           <Step
-            className={'white-description'}
-            title="Signing Metadata Transaction"
-            description="Approve the transaction from your wallet"
+            title="Assinando Metadados da Transação"
+            description="Aprove a transação pela sua carteira"
             icon={setIconForStep(props.step, 2)}
           />
           <Step
-            className={'white-description'}
-            title="Sending Transaction to Solana"
-            description="This will take a few seconds."
+            title="Enviando Transação para Solana"
+            description="Isso levará alguns segundos."
             icon={setIconForStep(props.step, 3)}
           />
           <Step
-            className={'white-description'}
-            title="Waiting for Initial Confirmation"
+            title="Aguardando confirmação inicial"
             icon={setIconForStep(props.step, 4)}
           />
           <Step
-            className={'white-description'}
-            title="Waiting for Final Confirmation"
+            title="Aguardando a confirmação final"
             icon={setIconForStep(props.step, 5)}
           />
           <Step
-            className={'white-description'}
-            title="Uploading to Arweave"
+            title="Carregando no Arweave"
             icon={setIconForStep(props.step, 6)}
           />
           <Step
-            className={'white-description'}
-            title="Updating Metadata"
+            title="Atualizando metadados"
             icon={setIconForStep(props.step, 7)}
           />
           <Step
-            className={'white-description'}
-            title="Signing Token Transaction"
-            description="Approve the final transaction from your wallet"
+            title="Assinando Transação de Token"
+            description="Aprove a transação final da sua carteira"
             icon={setIconForStep(props.step, 8)}
           />
         </Steps>
@@ -1321,28 +1252,14 @@ const Congrats = (props: {
 }) => {
   const history = useHistory();
 
-  const newTweetURL = () => {
-    const params = {
-      text: "I've created a new NFT artwork on Metaplex, check it out!",
-      url: `${
-        window.location.origin
-      }/#/art/${props.nft?.metadataAccount.toString()}`,
-      hashtags: 'NFT,Crypto,Metaplex',
-      // via: "Metaplex",
-      related: 'Metaplex,Solana',
-    };
-    const queryParams = new URLSearchParams(params).toString();
-    return `https://twitter.com/intent/tweet?${queryParams}`;
-  };
-
   if (props.alert) {
     // TODO  - properly reset this components state on error
     return (
       <>
-        <div className="waiting-title">Sorry, there was an error!</div>
+        <div className="waiting-title">Desculpe, houve um erro!</div>
         <p>{props.alert}</p>
         <Button onClick={() => history.push('/art/create')}>
-          Back to Create NFT
+          Voltar para Criar NFT
         </Button>
       </>
     );
@@ -1350,29 +1267,12 @@ const Congrats = (props: {
 
   return (
     <>
-      <div className="waiting-title">Congratulations, you created an NFT!</div>
+      <div className="waiting-title">
+        Parabéns, você criou um Certificado NFT!
+      </div>
       <div className="congrats-button-container">
-        <Button
-          className="metaplex-button"
-          onClick={() => window.open(newTweetURL(), '_blank')}
-        >
-          <span>Share it on Twitter</span>
-          <span>&gt;</span>
-        </Button>
-        <Button
-          className="metaplex-button"
-          onClick={() =>
-            history.push(`/art/${props.nft?.metadataAccount.toString()}`)
-          }
-        >
-          <span>See it in your collection</span>
-          <span>&gt;</span>
-        </Button>
-        <Button
-          className="metaplex-button"
-          onClick={() => history.push('/auction/create')}
-        >
-          <span>Sell it via auction</span>
+        <Button className="metaplex-button" onClick={() => history.push(`/`)}>
+          <span>Retorne a página inicial</span>
           <span>&gt;</span>
         </Button>
       </div>

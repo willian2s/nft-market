@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Layout,
   Row,
@@ -17,27 +17,20 @@ import {
   WhitelistedCreator,
 } from '@oyster/common/dist/lib/models/metaplex/index';
 import {
-  MasterEditionV1,
   notify,
   ParsedAccount,
   shortenAddress,
   StringPublicKey,
   useConnection,
   useStore,
-  useUserAccounts,
   useWalletModal,
   WalletSigner,
 } from '@oyster/common';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Connection } from '@solana/web3.js';
 import { saveAdmin } from '../../actions/saveAdmin';
-import {
-  convertMasterEditions,
-  filterMetadata,
-} from '../../actions/convertMasterEditions';
 import { Link } from 'react-router-dom';
 import { SetupVariables } from '../../components/SetupVariables';
-import { cacheAllAuctions } from '../../actions/cacheAllAuctions';
 
 const { Content } = Layout;
 export const AdminView = () => {
@@ -123,8 +116,10 @@ function ArtistModal({
     <>
       <Modal
         className={'modal-box'}
-        title="Add New Artist Address"
+        title="Adicionar novo criador"
         visible={modalOpen}
+        okText="Adicionar"
+        cancelText="Cancelar"
         onOk={() => {
           const addressToAdd = modalAddress;
           setModalAddress('');
@@ -132,7 +127,7 @@ function ArtistModal({
 
           if (uniqueCreatorsWithUpdates[addressToAdd]) {
             notify({
-              message: 'Artist already added!',
+              message: 'Criador já existe!',
               type: 'error',
             });
             return;
@@ -150,7 +145,7 @@ function ArtistModal({
             }));
           } catch {
             notify({
-              message: 'Only valid Solana addresses are supported',
+              message: 'Somente é válido enderços Solana',
               type: 'error',
             });
           }
@@ -165,7 +160,9 @@ function ArtistModal({
           onChange={e => setModalAddress(e.target.value)}
         />
       </Modal>
-      <Button onClick={() => setModalOpen(true)}>Add Creator</Button>
+      <Button onClick={() => setModalOpen(true)} className="attr-button">
+        Add Criador
+      </Button>
     </>
   );
 }
@@ -175,7 +172,6 @@ function InnerAdminView({
   whitelistedCreatorsByCreator,
   connection,
   wallet,
-  connected,
 }: {
   store: ParsedAccount<Store>;
   whitelistedCreatorsByCreator: Record<
@@ -192,28 +188,6 @@ function InnerAdminView({
   const [updatedCreators, setUpdatedCreators] = useState<
     Record<string, WhitelistedCreator>
   >({});
-  const [filteredMetadata, setFilteredMetadata] = useState<{
-    available: ParsedAccount<MasterEditionV1>[];
-    unavailable: ParsedAccount<MasterEditionV1>[];
-  }>();
-  const [loading, setLoading] = useState<boolean>();
-  const { metadata, masterEditions } = useMeta();
-  const state = useMeta();
-
-  const { accountByMint } = useUserAccounts();
-  useMemo(() => {
-    const fn = async () => {
-      setFilteredMetadata(
-        await filterMetadata(
-          connection,
-          metadata,
-          masterEditions,
-          accountByMint,
-        ),
-      );
-    };
-    fn();
-  }, [connected]);
 
   const uniqueCreators = Object.values(whitelistedCreatorsByCreator).reduce(
     (acc: Record<string, WhitelistedCreator>, e) => {
@@ -227,18 +201,18 @@ function InnerAdminView({
 
   const columns = [
     {
-      title: 'Name',
+      title: 'Nome',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Address',
+      title: 'Endereço',
       dataIndex: 'address',
       render: (val: StringPublicKey) => <span>{val}</span>,
       key: 'address',
     },
     {
-      title: 'Activated',
+      title: 'Ativado',
       dataIndex: 'activated',
       key: 'activated',
       render: (
@@ -295,8 +269,9 @@ function InnerAdminView({
                 });
               }}
               type="primary"
+              className="attr-button"
             >
-              Submit
+              Salvar
             </Button>
           </Col>
           <Col span={3}>
@@ -328,57 +303,6 @@ function InnerAdminView({
               image: uniqueCreatorsWithUpdates[key].image,
             }))}
           ></Table>
-        </Row>
-      </Col>
-
-      {!store.info.public && (
-        <>
-          <h1>
-            You have {filteredMetadata?.available.length} MasterEditionV1s that
-            can be converted right now and{' '}
-            {filteredMetadata?.unavailable.length} still in unfinished auctions
-            that cannot be converted yet.
-          </h1>
-          <Col>
-            <Row>
-              <Button
-                disabled={loading}
-                onClick={async () => {
-                  setLoading(true);
-                  await convertMasterEditions(
-                    connection,
-                    wallet,
-                    filteredMetadata?.available || [],
-                    accountByMint,
-                  );
-                  setLoading(false);
-                }}
-              >
-                {loading ? (
-                  <Spin />
-                ) : (
-                  <span>Convert Eligible Master Editions</span>
-                )}
-              </Button>
-            </Row>
-          </Col>{' '}
-        </>
-      )}
-      <Col>
-        <p style={{ marginTop: '30px' }}>
-          Upgrade the performance of your existing auctions.
-        </p>
-        <Row>
-          <Button
-            disabled={loading}
-            onClick={async () => {
-              setLoading(true);
-              await cacheAllAuctions(wallet, connection, state);
-              setLoading(false);
-            }}
-          >
-            {loading ? <Spin /> : <span>Upgrade Auction Performance</span>}
-          </Button>
         </Row>
       </Col>
     </Content>
