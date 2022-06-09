@@ -40,7 +40,7 @@ export const ArtworksView = () => {
     }
   }, [connected, setActiveKey]);
 
-  const isDataLoading = isLoading || isFetching;
+  const isDataLoading = isLoading;
 
   const artworkGrid = (
     <div className="artwork-grid">
