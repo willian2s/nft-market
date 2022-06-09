@@ -85,7 +85,7 @@ export const Settings = ({ narrow }: { narrow: boolean }) => {
         if (publicKey) {
           await navigator.clipboard.writeText(publicKey.toBase58());
           notify({
-            message: 'Wallet update',
+            message: 'Carteira Atualizada',
             description: 'Address copied to clipboard',
           });
         }

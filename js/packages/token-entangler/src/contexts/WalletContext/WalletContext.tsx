@@ -136,8 +136,8 @@ export const WalletModalProvider: FC<{ children: ReactNode }> = ({
           : base58;
 
       notify({
-        message: 'Wallet update',
-        description: 'Connected to wallet ' + keyToDisplay,
+        message: 'Carteira Atualizada',
+        description: 'Conectado à carteira ' + keyToDisplay,
       });
     }
   }, [publicKey]);
@@ -145,8 +145,8 @@ export const WalletModalProvider: FC<{ children: ReactNode }> = ({
   useEffect(() => {
     if (!publicKey && connected) {
       notify({
-        message: 'Wallet update',
-        description: 'Disconnected from wallet',
+        message: 'Carteira Atualizada',
+        description: 'Desconectado da carteira',
       });
     }
     setConnected(!!publicKey);
@@ -188,7 +188,7 @@ export const WalletProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const onError = useCallback((error: WalletError) => {
     console.error(error);
     notify({
-      message: 'Wallet error',
+      message: 'Erro da carteira',
       description: error.message,
     });
   }, []);

@@ -677,7 +677,7 @@ const InfoStep = (props: {
               }}
             />
             <span className="field-title" style={{ marginLeft: '10px' }}>
-              É coleção de pai?
+              É coleção pai?
             </span>
           </label>
           {!isCollection && (

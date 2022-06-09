@@ -28,7 +28,7 @@
     "test": "lerna run test --concurrency 1 --stream"
   },
   "lint-staged": {
-    "packages/*/{src,test}/**/*.{ts,tsx}": [
+    "packages/web/{src,test}/**/*.{ts,tsx}": [
       "prettier --write",
       "eslint --cache --fix --max-warnings=0"
     ]
