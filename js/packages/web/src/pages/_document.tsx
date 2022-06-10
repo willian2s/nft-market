@@ -24,7 +24,7 @@ export default class MetaplexDocument extends Document {
           />
           <link rel="icon" type="image/png" href="/favicon.png" />
           <meta name="theme-color" content="#000000" />
-          <meta name="description" content="ACE1 NFT Tool" />
+          <meta name="description" content="ACE1 NFT" />
           <link rel="manifest" href="/manifest.json" />
           <link
             rel="stylesheet"

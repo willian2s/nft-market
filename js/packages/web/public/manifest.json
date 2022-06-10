@@ -1,6 +1,6 @@
 {
-  "name": "ACE1 NFT Tool",
-  "short_name": "ACE1 NFT Tool",
+  "name": "ACE1 NFT",
+  "short_name": "ACE1 NFT",
   "display": "standalone",
   "start_url": "./",
   "theme_color": "#002140",

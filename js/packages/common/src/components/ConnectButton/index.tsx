@@ -27,7 +27,7 @@ export const ConnectButton = (props: ConnectButtonProps) => {
   if (!wallet || !allowWalletChange) {
     return (
       <Button
-        className={className || 'connector'}
+        className={className || ('connector' && 'attr-button')}
         {...rest}
         onClick={e => {
           props.onClick ? props.onClick(e) : null;
@@ -35,7 +35,7 @@ export const ConnectButton = (props: ConnectButtonProps) => {
         }}
         disabled={connected && disabled}
       >
-        {connected ? children : 'Connect Wallet'}
+        {connected ? children : 'Conectar Carteira'}
       </Button>
     );
   }

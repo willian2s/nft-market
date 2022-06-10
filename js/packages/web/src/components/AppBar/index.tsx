@@ -12,18 +12,32 @@ import {
 import { ConnectButton } from '@oyster/common';
 import { MobileNavbar } from '../MobileNavbar';
 
-const getDefaultLinkActions = () => {
-  return [
-    <Link to={`/`} key={'artwork'}>
-      <Button className="app-btn">NFTs</Button>
-    </Link>,
-    <Link to={`/art/create`} key={'artists'}>
-      <Button className="app-btn">Criar NFT</Button>
-    </Link>,
-  ];
+const getDefaultLinkActions = ({ storeWallet }: { storeWallet: boolean }) => {
+  const menuLinks = storeWallet
+    ? [
+        <Link to={`/`} key={'artwork'}>
+          <Button className="app-btn">Certificados</Button>
+        </Link>,
+        <Link to={`/art/create`} key={'artists'}>
+          <Button className="app-btn">Criar NFT</Button>
+        </Link>,
+      ]
+    : [
+        <Link to={`/`} key={'artwork'}>
+          <Button className="app-btn">Certificados</Button>
+        </Link>,
+      ];
+
+  return menuLinks;
 };
 
-const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
+const DefaultActions = ({
+  vertical = false,
+  storeWallet,
+}: {
+  vertical?: boolean;
+  storeWallet: boolean;
+}) => {
   return (
     <div
       style={{
@@ -31,7 +45,7 @@ const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
         flexDirection: vertical ? 'column' : 'row',
       }}
     >
-      {getDefaultLinkActions()}
+      {getDefaultLinkActions({ storeWallet })}
     </div>
   );
 };
@@ -39,7 +53,10 @@ const DefaultActions = ({ vertical = false }: { vertical?: boolean }) => {
 export const MetaplexMenu = () => {
   const { width } = useWindowDimensions();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
+
+  const storeWallet =
+    publicKey?.toString() === process.env.NEXT_PUBLIC_STORE_OWNER_ADDRESS;
 
   if (width < 768)
     return (
@@ -58,7 +75,7 @@ export const MetaplexMenu = () => {
         >
           <div className="site-card-wrapper mobile-menu-modal">
             <Menu onClick={() => setIsModalVisible(false)}>
-              {getDefaultLinkActions().map((item, idx) => (
+              {getDefaultLinkActions({ storeWallet }).map((item, idx) => (
                 <Menu.Item key={idx}>{item}</Menu.Item>
               ))}
             </Menu>
@@ -80,7 +97,7 @@ export const MetaplexMenu = () => {
                       setIsModalVisible(false);
                     }}
                   />
-                  <Cog />
+                  {storeWallet && <Cog />}
                 </>
               )}
             </div>
@@ -93,7 +110,7 @@ export const MetaplexMenu = () => {
       </>
     );
 
-  return <DefaultActions />;
+  return <DefaultActions storeWallet={storeWallet} />;
 };
 
 export const LogoLink = () => {
@@ -105,7 +122,11 @@ export const LogoLink = () => {
 };
 
 export const AppBar = () => {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
+
+  const storeWallet =
+    publicKey?.toString() === process.env.NEXT_PUBLIC_STORE_OWNER_ADDRESS;
+
   return (
     <>
       <MobileNavbar />
@@ -126,7 +147,7 @@ export const AppBar = () => {
                 showAddress={true}
                 iconSize={24}
               />
-              <Cog />
+              {storeWallet && <Cog />}
             </>
           )}
         </div>

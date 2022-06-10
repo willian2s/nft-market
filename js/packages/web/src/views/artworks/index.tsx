@@ -15,10 +15,13 @@ const { TabPane } = Tabs;
 const { Content } = Layout;
 
 export const ArtworksView = () => {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
   const { isLoading, pullItemsPage, isFetching, store } = useMeta();
   const { isConfigured } = useStore();
   const { userAccounts } = useUserAccounts();
+
+  const storeWallet =
+    publicKey?.toString() === process.env.NEXT_PUBLIC_STORE_OWNER_ADDRESS;
 
   const showArts = (store && isConfigured) || isLoading;
 
@@ -66,26 +69,47 @@ export const ArtworksView = () => {
       {showArts ? (
         <Content style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Col style={{ width: '100%', marginTop: 10 }}>
+            {!connected && (
+              <Row justify="center">
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: '2rem',
+                    color: '#008999',
+                  }}
+                >
+                  Conecte sua carteira para ver seus Certificados NFT
+                </div>
+              </Row>
+            )}
             <Row>
               <Tabs
                 activeKey={activeKey}
                 onTabClick={key => setActiveKey(key as ArtworkViewState)}
               >
-                <TabPane
-                  tab={<span className="tab-title">Todos</span>}
-                  key={ArtworkViewState.Metaplex}
-                >
-                  {artworkGrid}
-                </TabPane>
+                {/* {connected && storeWallet && (
+                  <TabPane
+                    tab={<span className="tab-title">Todos</span>}
+                    key={ArtworkViewState.Metaplex}
+                  >
+                    {artworkGrid}
+                  </TabPane>
+                )} */}
                 {connected && (
                   <TabPane
-                    tab={<span className="tab-title">Meus</span>}
+                    tab={
+                      <span className="tab-title">
+                        {storeWallet
+                          ? 'Certificados Emitidos'
+                          : 'Meus Certificados'}
+                      </span>
+                    }
                     key={ArtworkViewState.Owned}
                   >
                     {artworkGrid}
                   </TabPane>
                 )}
-                {connected && (
+                {connected && storeWallet && (
                   <TabPane
                     tab={<span className="tab-title">Criados</span>}
                     key={ArtworkViewState.Created}
